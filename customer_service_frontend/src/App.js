@@ -1,47 +1,40 @@
-import React, { useState, useEffect } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect } from "react";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import "./App.css";
+import TopNav from "./components/TopNav";
+import Dashboard from "./pages/Dashboard";
+import BookRepair from "./pages/BookRepair";
+import MyRequests from "./pages/MyRequests";
+import RequestDetail from "./pages/RequestDetail";
+import Support from "./pages/Support";
 
 // PUBLIC_INTERFACE
 function App() {
-  const [theme, setTheme] = useState('light');
-
-  // Effect to apply theme to document element
+  /** Customer portal entrypoint: booking + tracking UI with Ocean Professional styling. */
   useEffect(() => {
-    document.documentElement.setAttribute('data-theme', theme);
-  }, [theme]);
-
-  // PUBLIC_INTERFACE
-  const toggleTheme = () => {
-    setTheme(prevTheme => prevTheme === 'light' ? 'dark' : 'light');
-  };
+    // Apply a default light theme token if the template set a data-theme previously.
+    document.documentElement.setAttribute("data-theme", "light");
+  }, []);
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <button 
-          className="theme-toggle" 
-          onClick={toggleTheme}
-          aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
-        >
-          {theme === 'light' ? '🌙 Dark' : '☀️ Light'}
-        </button>
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <p>
-          Current theme: <strong>{theme}</strong>
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="App appShell">
+      <BrowserRouter>
+        <TopNav />
+        <Routes>
+          <Route path="/" element={<Dashboard />} />
+          <Route path="/book" element={<BookRepair />} />
+          <Route path="/requests" element={<MyRequests />} />
+          <Route path="/requests/:requestId" element={<RequestDetail />} />
+          <Route path="/support" element={<Support />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+        <footer className="footer">
+          <div className="footer__inner">
+            <span className="muted small">Mobile Repair Service Platform • Customer</span>
+            <span className="muted small">Ocean Professional theme</span>
+          </div>
+        </footer>
+      </BrowserRouter>
     </div>
   );
 }
